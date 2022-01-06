@@ -41,7 +41,8 @@
     "release": "bash scripts/release.sh",
     "release:weex": "bash scripts/release-weex.sh",
     "release:note": "node scripts/gen-release-note.js",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "serve": "http-server -p 5000"
   },
   "gitHooks": {
     "pre-commit": "lint-staged",

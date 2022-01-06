@@ -303,19 +303,31 @@ function initWatch (vm: Component, watch: Object) {
   }
 }
 
+/**
+ * 1. 获取到监听回调
+ * 2. 调用 vm.$watch 方法
+ * @param {*} vm 
+ * @param {*} expOrFn 
+ * @param {*} handler 
+ * @param {*} options 
+ */
 function createWatcher (
   vm: Component,
+  // expOrFn 是 key, handler 可能是对象
   expOrFn: string | Function,
   handler: any,
   options?: Object
 ) {
+  // 监听属性是一个对象，包含handler, deep, immediate
   if (isPlainObject(handler)) {
     options = handler
     handler = handler.handler
   }
+  // 回调函数是一个字符串，从 vm 获取
   if (typeof handler === 'string') {
     handler = vm[handler]
   }
+  // expOrFn 是 key, options 是watch的全部选项
   return vm.$watch(expOrFn, handler, options)
 }
 
@@ -346,6 +358,7 @@ export function stateMixin (Vue: Class<Component>) {
   Vue.prototype.$delete = del
 
   Vue.prototype.$watch = function (
+    // expOrFn 是 监听的 key, cb 是监听回调，options 是所有选项
     expOrFn: string | Function,
     cb: any,
     options?: Object
@@ -357,6 +370,7 @@ export function stateMixin (Vue: Class<Component>) {
     options = options || {}
     options.user = true
     const watcher = new Watcher(vm, expOrFn, cb, options)
+    // 设定了立即执行，所以马上执行回调
     if (options.immediate) {
       const info = `callback for immediate watcher "${watcher.expression}"`
       pushTarget()
