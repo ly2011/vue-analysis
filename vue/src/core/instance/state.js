@@ -62,7 +62,15 @@ export function initState (vm: Component) {
   }
 }
 
+/**
+ * 1. 遍历 props
+ * 2. 给 props 设置响应式
+ * 3. 给 props 设置代理
+ * @param {*} vm 
+ * @param {*} propsOptions 
+ */
 function initProps (vm: Component, propsOptions: Object) {
+  // propsData：这是父组件给子组件传入的 props 的具体值
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
@@ -86,6 +94,7 @@ function initProps (vm: Component, propsOptions: Object) {
           vm
         )
       }
+      // 给 props 的 key 设置响应式
       defineReactive(props, key, value, () => {
         if (!isRoot && !isUpdatingChildComponent) {
           warn(
@@ -104,6 +113,7 @@ function initProps (vm: Component, propsOptions: Object) {
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
     if (!(key in vm)) {
+      // 转接访问，访问 vm 属性，转到访问 vm._props 属性
       proxy(vm, `_props`, key)
     }
   }
